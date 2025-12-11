@@ -1,0 +1,441 @@
+/* ========== Base Reset ========== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-main: #1a535c;
+  --accent: #4ecdc4;
+  --accent-soft: rgba(255, 255, 255, 0.15);
+  --accent-strong: #ffe66d;
+  --text-light: #f7fff7;
+  --danger: #ff6b6b;
+}
+
+/* ========== Global Layout ========== */
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: radial-gradient(circle at top, #2b8c99 0%, #1a535c 45%, #102b33 100%);
+  color: var(--text-light);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.page {
+  width: 100%;
+  max-width: 960px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* ========== Hero / Header ========== */
+.hero {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.hero-subtitle {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* ========== Glassmorphism Card ========== */
+.backdrop {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+}
+
+/* ========== Input Container ========== */
+.container {
+  margin-top: 16px;
+  padding: 20px 18px 18px;
+}
+
+/* Input row */
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(26, 83, 92, 0.5);
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: rgba(247, 255, 247, 0.7);
+}
+
+/* Add button */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-strong);
+  color: #1a535c;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    background-color 0.15s ease;
+}
+
+.icon-btn i {
+  font-size: 1.4rem;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  background-color: #ffe255;
+}
+
+/* Calendar row */
+.calendar-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.calendar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--accent);
+  color: #1a535c;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    background-color 0.15s ease;
+}
+
+.calendar-btn i {
+  font-size: 1rem;
+}
+
+.calendar-btn:hover {
+  transform: translateY(-1px);
+  background-color: #41bcb3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.date-input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(26, 83, 92, 0.5);
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* ========== Tabs ========== */
+.tabs {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: 68px;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: #1a535c;
+  transform: translateY(-1px);
+}
+
+/* ========== Stats ========== */
+.stats {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* ========== List Section ========== */
+.list-section {
+  margin-top: 18px;
+}
+
+/* Desktop table (hidden on mobile by default) */
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  display: none; /* mobile-first: show later via media query */
+}
+
+.todo-table thead {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.todo-table th,
+.todo-table td {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.todo-table th {
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.todo-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.todo-table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Strike-through for completed tasks */
+.strike {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* ========== Custom Checkbox ========== */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.custom-checkbox label {
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* ========== Action Icons ========== */
+.action-icon i,
+.todo-card-actions i {
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.action-icon i:hover,
+.todo-card-actions i:hover {
+  transform: translateY(-1px) scale(1.05);
+  opacity: 0.85;
+}
+
+/* ========== Badges ========== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge i {
+  font-size: 1rem;
+}
+
+.badge-completed {
+  background-color: #2ecc71;
+  color: #ffffff;
+}
+
+.badge-today {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.badge-pending {
+  background-color: #f1c40f;
+  color: #333333;
+}
+
+/* ========== Mobile Cards ========== */
+#mobileList {
+  margin-top: 10px;
+}
+
+.todo-card {
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+}
+
+.todo-card-header {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.todo-card-date {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.todo-card-status {
+  margin: 6px 0 8px;
+}
+
+.todo-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Edit inputs inside card */
+.card-edit-input,
+.card-date-input {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(26, 83, 92, 0.6);
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* ========== Modal ========== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  padding: 18px 18px 16px;
+  max-width: 320px;
+  width: calc(100% - 40px);
+  text-align: center;
+  color: var(--text-light);
+}
+
+.modal-content p {
+  margin-bottom: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: var(--accent);
+  color: #1a535c;
+}
+
+/* ========== Responsive (Tablet / Desktop) ========== */
+@media (min-width: 769px) {
+  .page {
+    margin-top: 40px;
+  }
+
+  .container {
+    padding: 22px 24px 18px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .todo-table {
+    display: table;
+  }
+
+  #mobileList {
+    display: none;
+  }
+
+  .list-section {
+    margin-top: 20px;
+  }
+}
