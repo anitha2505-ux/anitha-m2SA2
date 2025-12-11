@@ -1,4 +1,4 @@
-/* ========== Base Reset ========== */
+/* Base Reset  */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,7 +14,7 @@
   --danger: #ff6b6b;
 }
 
-/* ========== Global Layout ========== */
+/*  Global Layout  */
 body {
   min-height: 100vh;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -33,7 +33,7 @@ body {
   padding: 0 16px;
 }
 
-/* ========== Hero / Header ========== */
+/*  Hero / Header  */
 .hero {
   text-align: center;
   margin-bottom: 16px;
@@ -51,7 +51,7 @@ body {
   opacity: 0.85;
 }
 
-/* ========== Glassmorphism Card ========== */
+/*  Glassmorphism Card  */
 .backdrop {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 18px;
@@ -59,7 +59,7 @@ body {
   backdrop-filter: blur(16px);
 }
 
-/* ========== Input Container ========== */
+/*  Input Container  */
 .container {
   margin-top: 16px;
   padding: 20px 18px 18px;
@@ -157,7 +157,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ========== Tabs ========== */
+/*  Tabs  */
 .tabs {
   margin-top: 16px;
   display: flex;
@@ -186,7 +186,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* ========== Stats ========== */
+/*  Stats  */
 .stats {
   margin-top: 14px;
   padding-top: 10px;
@@ -197,7 +197,7 @@ body {
   opacity: 0.9;
 }
 
-/* ========== List Section ========== */
+/*  List Section  */
 .list-section {
   margin-top: 18px;
 }
@@ -240,7 +240,7 @@ body {
   opacity: 0.6;
 }
 
-/* ========== Custom Checkbox ========== */
+/*  Custom Checkbox  */
 .custom-checkbox {
   display: flex;
   align-items: center;
@@ -258,7 +258,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ========== Action Icons ========== */
+/*  Action Icons */
 .action-icon i,
 .todo-card-actions i {
   cursor: pointer;
@@ -275,7 +275,7 @@ body {
   opacity: 0.85;
 }
 
-/* ========== Badges ========== */
+/*  Badges  */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -356,7 +356,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ========== Modal ========== */
+/*  Modal  */
 .modal {
   position: fixed;
   inset: 0;
@@ -409,7 +409,7 @@ body {
   color: #1a535c;
 }
 
-/* ========== Responsive (Tablet / Desktop) ========== */
+/*  Responsive (Tablet / Desktop)  */
 @media (min-width: 769px) {
   .page {
     margin-top: 40px;

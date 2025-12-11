@@ -1,27 +1,18 @@
-// ======================================================
-// Smart To-Do List Application (Vanilla JS + JSONBin)
-// ======================================================
-
+ // Smart To-Do List Application (Vanilla JS + JSONBin)
 document.addEventListener("DOMContentLoaded", () => {
-  /************************************
-   * JSONBIN CONFIGURATION
-   ************************************/
+ // JSONBIN CONFIGURATION
   const BIN_ID = "693aa845ae596e708f9272f5";
   const API_KEY = "$2a$10$nZqTnuy0EUn/bn2HI8fFp.8yTp/o6ynINyV0znInPbP0Q33rlZpd6";
   const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-  /************************************
-   * APPLICATION STATE
-   ************************************/
+ // APPLICATION STATE
   let todos = [];
   let nextID = 1;
   let editingID = null;
   let deleteID = null;
   let currentFilter = "All";
 
-  /************************************
-   * DOM ELEMENTS
-   ************************************/
+ // DOM ELEMENTS
   const todoInput = document.querySelector("#todoInput");
   const todoDate = document.querySelector("#taskDate");
   const addBtn = document.querySelector("#addBtn");
@@ -38,10 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileList = document.querySelector("#mobileList");
   const tabButtons = document.querySelectorAll(".tab-btn");
 
-  /************************************
-   * UTILITIES
-   ************************************/
-  function escapeHtml(text) {
+  
+   // UTILITIES
+   function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
@@ -72,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return array.length;
   }
 
-  /************************************
-   * JSONBIN API METHODS (GET + PUT)
-   ************************************/
+  
+   // JSONBIN API METHODS (GET + PUT)
+ 
   async function loadTodosFromAPI() {
     try {
       const response = await fetch(JSONBIN_URL, {
@@ -111,9 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /************************************
-   * CRUD FUNCTIONS
-   ************************************/
+  
+// CRUD FUNCTIONS
+   
   async function addTodo() {
     const text = todoInput.value.trim();
     const date = todoDate.value;
@@ -187,9 +177,9 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteID = null;
   }
 
-  /************************************
-   * RENDER ENGINE (DESKTOP + MOBILE)
-   ************************************/
+ 
+   // RENDER ENGINE (DESKTOP + MOBILE)
+   
   function renderTodos() {
     todoTableBody.innerHTML = "";
     mobileList.innerHTML = "";
@@ -221,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     filtered.forEach((todo) => {
       const strikeClass = todo.completed ? "strike" : "";
 
-      /******** DESKTOP TABLE ********/
+      // DESKTOP TABLE 
       if (!isMobile) {
         const tr = document.createElement("tr");
 
@@ -249,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         todoTableBody.appendChild(tr);
       }
 
-      /******** MOBILE CARDS ********/
+      // MOBILE CARDS 
       else {
         const card = document.createElement("div");
         card.className = "todo-card";
@@ -284,9 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /************************************
-   * STATS
-   ************************************/
+  
+   //STATS
+   
   function updateStats() {
     const total = todos.length;
     const completed = countItems(getTodosByStatus("Completed"));
@@ -295,9 +285,9 @@ document.addEventListener("DOMContentLoaded", () => {
     completedTasksSpan.textContent = `${completed} completed`;
   }
 
-  /************************************
-   * EVENT HANDLERS
-   ************************************/
+  
+   // EVENT HANDLERS
+   
   addBtn.addEventListener("click", addTodo);
 
   todoInput.addEventListener("keypress", (e) => {
@@ -342,8 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("resize", renderTodos);
 
-  /************************************
-   * INITIAL LOAD
-   ************************************/
+  //INITIAL LOAD
+   
   loadTodosFromAPI();
 });
