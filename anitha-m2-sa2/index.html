@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent To-Do List</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <!-- Add Task Section-->
+    <section class="container backdrop">
+        <header>My To-Do List</header>
+        <div class="search-div">
+            <input type="text" id="todoInput" class="form-input" placeholder="Add Task" autocomplete="off" />
+            <button type="button" id="addBtn"><i class="bx bx-plus"></i></button>
+        </div>
+        <div id="stats" class="stats">
+        <span id="totalTasks">0 Tasks</span>
+        <span id="completedTasks">0 Tasks</span>
+        </div>
+    </section>
+    <!--End of Add Task Section-->
+
+    <!--Section Action-Tasks-->
+    <section class="list-section">
+        <ul id="todoList" class="todoList">
+             <!-- <li class="backdrop">
+                <label class="custom-checkbox">
+                    <input type="checkbox" /> Name
+                </label>
+                <div class="actions-icons">
+                    <i class="bx bx-edit"></i>
+                    <i class="bx bx-trash-alt"></i>
+                </div>
+            </li>
+            <li class="backdrop">
+                <label class="custom-checkbox">
+                    <input type="checkbox" />
+                </label>
+                <input type="text" class="form-input" placeholder="Edit"/>
+                <div class = "actions-icons">
+                    <i class="bx bx-save"></i>
+                    <i class="bx bx-x"></i>
+                </div>
+            </li> -->
+        </ul>
+    </section>
+    <!--End of Section Action-Tasks-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.13.2/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
