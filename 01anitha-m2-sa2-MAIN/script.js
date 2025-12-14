@@ -1,42 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
- 
   // JSONBIN CONFIGURATION
   const BIN_ID = "693aa845ae596e708f9272f5";
   const API_KEY = "$2a$10$nZqTnuy0EUn/bn2HI8fFp.8yTp/o6ynINyV0znInPbP0Q33rlZpd6";
   const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-  // ---- DISPLAY DATE & TIME BASED ON USER TIMEZONE ----
-function updateDateTime() {
-  const now = new Date();
-  
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  };
-
-  const formatted = now.toLocaleString(undefined, options);
-
-  const display = document.getElementById("dateTimeDisplay");
-  if (display) display.textContent = formatted;
-}
-
-// Update every second
-setInterval(updateDateTime, 1000);
-updateDateTime();
-
- // APPLICATION STATE
+  // APPLICATION STATE
   let todos = [];
   let nextID = 1;
   let editingID = null;
   let deleteID = null;
   let currentFilter = "All";
 
- // DOM ELEMENTS
+  // DOM ELEMENTS
   const todoInput = document.querySelector("#todoInput");
   const todoDate = document.querySelector("#taskDate");
   const addBtn = document.querySelector("#addBtn");
@@ -53,9 +28,19 @@ updateDateTime();
   const mobileList = document.querySelector("#mobileList");
   const tabButtons = document.querySelectorAll(".tab-btn");
 
-  
-   // UTILITIES
-   function escapeHtml(text) {
+  const dateTimeDisplay = document.querySelector("#dateTimeDisplay");
+  const exportExcelBtn = document.querySelector("#exportExcelBtn");
+
+  // Slide-in calendar DOM
+  const calendarPanel = document.querySelector("#calendarPanel");
+  const closeCalendarPanel = document.querySelector("#closeCalendarPanel");
+  const calendarPanelContainer = document.querySelector("#calendarPanelContainer");
+  const calendarPanelTasks = document.querySelector("#calendarPanelTasks");
+  const calendarMonthTitle = document.querySelector("#calendarMonthTitle");
+
+  // ========== UTILITIES ==========
+
+  function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
@@ -86,9 +71,38 @@ updateDateTime();
     return array.length;
   }
 
-  
-   // JSONBIN API METHODS (GET + PUT)
- 
+  // ---- DATE & TIME DISPLAY ----
+  function updateDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    const formatted = now.toLocaleString(undefined, options);
+    if (dateTimeDisplay) {
+      dateTimeDisplay.textContent = formatted;
+    }
+  }
+
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  // ---- SCROLL LOCK FOR PANEL ----
+  function lockScroll() {
+    document.body.style.overflow = "hidden";
+  }
+
+  function unlockScroll() {
+    document.body.style.overflow = "";
+  }
+
+  // ========== JSONBIN API METHODS (GET + PUT) ==========
+
   async function loadTodosFromAPI() {
     try {
       const response = await fetch(JSONBIN_URL, {
@@ -125,9 +139,8 @@ updateDateTime();
     }
   }
 
-  
-// CRUD FUNCTIONS
-   
+  // ========== CRUD FUNCTIONS ==========
+
   async function addTodo() {
     const text = todoInput.value.trim();
     const date = todoDate.value;
@@ -169,8 +182,9 @@ updateDateTime();
 
   async function saveTodo(id) {
     const input = document.querySelector(`input[data-id="${id}"]`);
-    const newText = input.value.trim();
-    const newDate = document.querySelector(`#edit-date-${id}`).value;
+    const newText = input ? input.value.trim() : "";
+    const dateInput = document.querySelector(`#edit-date-${id}`);
+    const newDate = dateInput ? dateInput.value : "";
 
     if (!newText) return;
 
@@ -201,9 +215,8 @@ updateDateTime();
     deleteID = null;
   }
 
- 
-   // RENDER ENGINE (DESKTOP + MOBILE)
-   
+  // ========== RENDER ENGINE (DESKTOP + MOBILE) ==========
+
   function renderTodos() {
     todoTableBody.innerHTML = "";
     mobileList.innerHTML = "";
@@ -235,14 +248,18 @@ updateDateTime();
     filtered.forEach((todo) => {
       const strikeClass = todo.completed ? "strike" : "";
 
-      // DESKTOP TABLE 
+      // DESKTOP TABLE
       if (!isMobile) {
         const tr = document.createElement("tr");
 
         if (editingID === todo.id) {
           tr.innerHTML = `
-            <td><input type="text" class="form-input" data-id="${todo.id}" value="${escapeHtml(todo.text)}"></td>
-            <td><input type="date" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}"></td>
+            <td><input type="text" class="form-input" data-id="${todo.id}" value="${escapeHtml(
+              todo.text
+            )}"></td>
+            <td><input type="date" id="edit-date-${todo.id}" value="${
+              todo.date !== "No date" ? todo.date : ""
+            }"></td>
             <td>${getStatusBadge(todo.status)}</td>
             <td><i class='bx bx-save' data-action='save' data-id="${todo.id}"></i></td>
             <td><i class='bx bx-x' data-action='cancel'></i></td>
@@ -250,7 +267,9 @@ updateDateTime();
         } else {
           tr.innerHTML = `
             <td class="${strikeClass}">
-              <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
+              <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${
+            todo.completed ? "checked" : ""
+          }>
               ${escapeHtml(todo.text)}
             </td>
             <td class="${strikeClass}">${todo.date}</td>
@@ -263,15 +282,19 @@ updateDateTime();
         todoTableBody.appendChild(tr);
       }
 
-      // MOBILE CARDS 
+      // MOBILE CARDS
       else {
         const card = document.createElement("div");
         card.className = "todo-card";
 
         if (editingID === todo.id) {
           card.innerHTML = `
-            <input type="text" class="card-edit-input" data-id="${todo.id}" value="${escapeHtml(todo.text)}">
-            <input type="date" class="card-date-input" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}">
+            <input type="text" class="card-edit-input" data-id="${todo.id}" value="${escapeHtml(
+              todo.text
+            )}">
+            <input type="date" class="card-date-input" id="edit-date-${todo.id}" value="${
+              todo.date !== "No date" ? todo.date : ""
+            }">
             <div class="todo-card-actions">
               <i class='bx bx-save' data-action='save' data-id="${todo.id}"></i>
               <i class='bx bx-x' data-action='cancel'></i>
@@ -283,7 +306,9 @@ updateDateTime();
             <div class="todo-card-date ${strikeClass}">Due: ${todo.date}</div>
             <div class="todo-card-status">${getStatusBadge(todo.status)}</div>
             <div class="custom-checkbox">
-              <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
+              <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${
+            todo.completed ? "checked" : ""
+          }>
               <label>Completed</label>
             </div>
             <div class="todo-card-actions">
@@ -298,9 +323,8 @@ updateDateTime();
     });
   }
 
-  
-   //STATS
-   
+  // ========== STATS ==========
+
   function updateStats() {
     const total = todos.length;
     const completed = countItems(getTodosByStatus("Completed"));
@@ -309,46 +333,133 @@ updateDateTime();
     completedTasksSpan.textContent = `${completed} completed`;
   }
 
-  
-   // EVENT HANDLERS
-  // ---- EXPORT TO EXCEL ----
-function exportToExcel() {
-  if (todos.length === 0) {
-    alert("No tasks available to export!");
-    return;
+  // ========== EXPORT TO EXCEL ==========
+
+  function exportToExcel() {
+    if (!todos.length) {
+      alert("No tasks available to export!");
+      return;
+    }
+
+    if (typeof XLSX === "undefined") {
+      alert("Excel export is not available (XLSX library not loaded).");
+      return;
+    }
+
+    const excelData = todos.map((t) => ({
+      Task: t.text,
+      "Due Date": t.date,
+      Status: getStatus(t),
+      Completed: t.completed ? "Yes" : "No",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "To-Do List");
+
+    XLSX.writeFile(workbook, "My_Todo_List.xlsx");
   }
 
-  // Prepare data rows for Excel
-  const excelData = todos.map(t => ({
-    "Task": t.text,
-    "Due Date": t.date,
-    "Status": getStatus(t),
-    "Completed": t.completed ? "Yes" : "No"
-  }));
+  // ========== SLIDE-IN CALENDAR (RESPONSIVE) ==========
 
-  // Convert data to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(excelData);
+  function openCalendarPanel() {
+    if (!calendarPanel) return;
+    buildSlideCalendar();
+    calendarPanel.classList.add("show");
+    lockScroll();
+  }
 
-  // Create workbook
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "To-Do List");
+  function closePanel() {
+    if (!calendarPanel) return;
+    calendarPanel.classList.remove("show");
+    if (calendarPanelTasks) calendarPanelTasks.innerHTML = "";
+    unlockScroll();
+  }
 
-  // Download as Excel file
-  XLSX.writeFile(workbook, "My_Todo_List.xlsx");
-}
+  function buildSlideCalendar() {
+    if (!calendarPanelContainer || !calendarMonthTitle) return;
 
-// Attach to button
-document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
-   
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    calendarMonthTitle.textContent = today.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    });
+
+    calendarPanelContainer.innerHTML = `
+      <div class="calendar-grid"></div>
+    `;
+
+    const grid = calendarPanelContainer.querySelector(".calendar-grid");
+    if (!grid) return;
+
+    // blanks before month starts
+    for (let i = 0; i < firstDay; i++) {
+      grid.innerHTML += `<div></div>`;
+    }
+
+    // fill days
+    for (let d = 1; d <= totalDays; d++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const tasks = todos.filter((t) => t.date === dateStr);
+
+      grid.innerHTML += `
+        <div class="calendar-day ${tasks.length ? "has-tasks" : ""}" data-date="${dateStr}">
+          <div>${d}</div>
+          ${tasks.length ? `<small>${tasks.length} task(s)</small>` : ""}
+        </div>
+      `;
+    }
+
+    document.querySelectorAll(".calendar-day").forEach((day) => {
+      day.addEventListener("click", () => showTasksInPanel(day.dataset.date));
+    });
+  }
+
+  function showTasksInPanel(date) {
+    if (!calendarPanelTasks) return;
+
+    const list = todos.filter((t) => t.date === date);
+
+    if (!list.length) {
+      calendarPanelTasks.innerHTML = `<p>No tasks for ${date}</p>`;
+      return;
+    }
+
+    let html = `<h4>Tasks on ${date}</h4>`;
+
+    list.forEach((t) => {
+      html += `
+        <div class="calendar-task-item">
+          <strong>${escapeHtml(t.text)}</strong><br>
+          Status: ${getStatus(t)}
+        </div>
+      `;
+    });
+
+    calendarPanelTasks.innerHTML = html;
+  }
+
+  // ========== EVENT HANDLERS ==========
+
   addBtn.addEventListener("click", addTodo);
 
   todoInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") addTodo();
   });
 
+  // Keep native date picker on single click
   calendarBtn.addEventListener("click", () => {
     todoDate.showPicker?.();
   });
+
+  // Open slide-in calendar on double-click
+  calendarBtn.addEventListener("dblclick", openCalendarPanel);
 
   document.addEventListener("click", (e) => {
     const action = e.target.dataset.action;
@@ -384,9 +495,14 @@ document.getElementById("exportExcelBtn").addEventListener("click", exportToExce
 
   window.addEventListener("resize", renderTodos);
 
-  //INITIAL LOAD
-   
+  if (exportExcelBtn) {
+    exportExcelBtn.addEventListener("click", exportToExcel);
+  }
+
+  if (closeCalendarPanel) {
+    closeCalendarPanel.addEventListener("click", closePanel);
+  }
+
+  // INITIAL LOAD
   loadTodosFromAPI();
 });
-
-
