@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart To-Do List</title>
+  <title>TaskGlide</title>
 
   <link
     href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
@@ -16,10 +16,11 @@
   <main class="page">
     <!-- Header / Intro -->
     <section class="hero">
-      <h1 class="hero-title">My To-Do List</h1>
+      <h1 class="hero-title">Welcome to TaskGlide!</h1>
       <p class="hero-subtitle">
         Track your daily tasks, due dates, and progress in one place.
       </p>
+      <p id="dateTimeDisplay" class="hero-subtitle"></p>
     </section>
 
     <!-- Main To-Do Panel -->
@@ -60,6 +61,11 @@
         <span id="totalTasks">0 tasks</span>
         <span id="completedTasks">0 completed</span>
       </div>
+
+      <!--Export -->
+      <button id="exportExcelBtn" class="calendar-btn" style="margin-top: 12px;">
+        <i class="bx bx-export"></i> Export to Excel
+        </button>
     </section>
 
     <!-- List Section -->
@@ -93,6 +99,9 @@
       </div>
     </div>
   </div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
    <script src="script.js"></script>
 </body>
 </html>
+
+

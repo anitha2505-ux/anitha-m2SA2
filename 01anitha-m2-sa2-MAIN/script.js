@@ -1,9 +1,33 @@
- // Smart To-Do List Application (Vanilla JS + JSONBin)
 document.addEventListener("DOMContentLoaded", () => {
- // JSONBIN CONFIGURATION
+ 
+  // JSONBIN CONFIGURATION
   const BIN_ID = "693aa845ae596e708f9272f5";
   const API_KEY = "$2a$10$nZqTnuy0EUn/bn2HI8fFp.8yTp/o6ynINyV0znInPbP0Q33rlZpd6";
   const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+  // ---- DISPLAY DATE & TIME BASED ON USER TIMEZONE ----
+function updateDateTime() {
+  const now = new Date();
+  
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+
+  const formatted = now.toLocaleString(undefined, options);
+
+  const display = document.getElementById("dateTimeDisplay");
+  if (display) display.textContent = formatted;
+}
+
+// Update every second
+setInterval(updateDateTime, 1000);
+updateDateTime();
 
  // APPLICATION STATE
   let todos = [];
@@ -287,6 +311,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
    // EVENT HANDLERS
+  // ---- EXPORT TO EXCEL ----
+function exportToExcel() {
+  if (todos.length === 0) {
+    alert("No tasks available to export!");
+    return;
+  }
+
+  // Prepare data rows for Excel
+  const excelData = todos.map(t => ({
+    "Task": t.text,
+    "Due Date": t.date,
+    "Status": getStatus(t),
+    "Completed": t.completed ? "Yes" : "No"
+  }));
+
+  // Convert data to worksheet
+  const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+  // Create workbook
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "To-Do List");
+
+  // Download as Excel file
+  XLSX.writeFile(workbook, "My_Todo_List.xlsx");
+}
+
+// Attach to button
+document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
    
   addBtn.addEventListener("click", addTodo);
 
@@ -336,3 +388,5 @@ document.addEventListener("DOMContentLoaded", () => {
    
   loadTodosFromAPI();
 });
+
+
