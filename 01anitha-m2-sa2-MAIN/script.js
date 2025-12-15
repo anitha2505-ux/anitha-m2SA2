@@ -164,35 +164,70 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStats();
     await saveTodosToAPI();
   }
+  /* ================= EXPORT TO EXCEL ================= */
 
+  exportExcelBtn.addEventListener("click", () => {
+    if (!todos.length) {
+      alert("No tasks to export");
+      return;
+    }
+
+    // Prepare data
+    const exportData = todos.map(todo => ({
+      Task: todo.text,
+      "Due Date": todo.date,
+      Status: getStatus(todo),
+      Completed: todo.completed ? "Yes" : "No"
+    }));
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
+
+    // Auto column width
+    const colWidths = Object.keys(exportData[0]).map(key => ({
+      wch: Math.max(
+        key.length,
+        ...exportData.map(row => String(row[key]).length)
+      ) + 2
+    }));
+    worksheet["!cols"] = colWidths;
+
+    // Download file
+    XLSX.writeFile(workbook, "TaskGlide_Tasks.xlsx");
+  });
+  
   // RENDER
   function renderTodos() {
-  todoTableBody.innerHTML = "";
-  mobileList.innerHTML = "";
+    todoTableBody.innerHTML = "";
+    mobileList.innerHTML = "";
 
-  let filtered = todos.map(t => ({ ...t, status: getStatus(t) }));
-  if (currentFilter !== "All") {
-    filtered = filtered.filter(t => t.status === currentFilter);
-  }
+    let filtered = todos.map(t => ({ ...t, status: getStatus(t) }));
+    if (currentFilter !== "All") {
+      filtered = filtered.filter(t => t.status === currentFilter);
+    }
 
-  const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 768;
 
-  filtered.forEach(todo => {
-    const strike = todo.completed ? "strike" : "";
+    filtered.forEach(todo => {
+      const strike = todo.completed ? "strike" : "";
 
-    /* ================= DESKTOP TABLE ================= */
-    if (!isMobile) {
-      const tr = document.createElement("tr");
+      /* ================= DESKTOP TABLE ================= */
+      if (!isMobile) {
+        const tr = document.createElement("tr");
 
-      tr.innerHTML = editingID === todo.id
-        ? `
+        tr.innerHTML = editingID === todo.id
+          ? `
           <td><input data-id="${todo.id}" value="${escapeHtml(todo.text)}"></td>
           <td><input type="date" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}"></td>
           <td>${getStatusBadge(todo.status)}</td>
           <td><i class='bx bx-save' data-action='save' data-id="${todo.id}"></i></td>
           <td><i class='bx bx-x' data-action='cancel'></i></td>
         `
-        : `
+          : `
           <td class="${strike}">
             <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
             ${escapeHtml(todo.text)}
@@ -202,16 +237,16 @@ document.addEventListener("DOMContentLoaded", () => {
           <td><i class='bx bx-edit' data-action='edit' data-id="${todo.id}"></i></td>
           <td><i class='bx bx-trash' data-action='delete' data-id="${todo.id}"></i></td>
         `;
-      todoTableBody.appendChild(tr);
-    }
+        todoTableBody.appendChild(tr);
+      }
 
-    /* ================= MOBILE CARDS ================= */
-    else {
-      const card = document.createElement("div");
-      card.className = "todo-card";
+      /* ================= MOBILE CARDS ================= */
+      else {
+        const card = document.createElement("div");
+        card.className = "todo-card";
 
-      card.innerHTML = editingID === todo.id
-        ? `
+        card.innerHTML = editingID === todo.id
+          ? `
           <input class="card-edit-input" data-id="${todo.id}" value="${escapeHtml(todo.text)}">
           <input class="card-date-input" type="date" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}">
           <div class="todo-card-actions">
@@ -219,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <i class='bx bx-x' data-action='cancel'></i>
           </div>
         `
-        : `
+          : `
           <div class="todo-card-header ${strike}">
             <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
             ${escapeHtml(todo.text)}
@@ -232,10 +267,10 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-      mobileList.appendChild(card);
-    }
-  });
-}
+        mobileList.appendChild(card);
+      }
+    });
+  }
 
   // STATS
   function updateStats() {
