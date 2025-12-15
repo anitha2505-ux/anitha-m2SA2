@@ -167,34 +167,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // RENDER
   function renderTodos() {
-    todoTableBody.innerHTML = "";
-    mobileList.innerHTML = "";
+  todoTableBody.innerHTML = "";
+  mobileList.innerHTML = "";
 
-    let filtered = todos.map((t) => ({ ...t, status: getStatus(t) }));
-    if (currentFilter !== "All")
-      filtered = filtered.filter((t) => t.status === currentFilter);
+  let filtered = todos.map(t => ({ ...t, status: getStatus(t) }));
+  if (currentFilter !== "All") {
+    filtered = filtered.filter(t => t.status === currentFilter);
+  }
 
-    const order = { "Due Today": 1, Pending: 2, Completed: 3 };
-    filtered.sort((a, b) => order[a.status] - order[b.status]);
+  const isMobile = window.innerWidth <= 768;
 
-    const isMobile = window.innerWidth <= 768;
+  filtered.forEach(todo => {
+    const strike = todo.completed ? "strike" : "";
 
-    filtered.forEach((todo) => {
-      const strike = todo.completed ? "strike" : "";
+    /* ================= DESKTOP TABLE ================= */
+    if (!isMobile) {
+      const tr = document.createElement("tr");
 
-      if (!isMobile) {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML =
-          editingID === todo.id
-            ? `
+      tr.innerHTML = editingID === todo.id
+        ? `
           <td><input data-id="${todo.id}" value="${escapeHtml(todo.text)}"></td>
           <td><input type="date" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}"></td>
           <td>${getStatusBadge(todo.status)}</td>
           <td><i class='bx bx-save' data-action='save' data-id="${todo.id}"></i></td>
           <td><i class='bx bx-x' data-action='cancel'></i></td>
         `
-            : `
+        : `
           <td class="${strike}">
             <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
             ${escapeHtml(todo.text)}
@@ -202,12 +200,42 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="${strike}">${todo.date}</td>
           <td>${getStatusBadge(todo.status)}</td>
           <td><i class='bx bx-edit' data-action='edit' data-id="${todo.id}"></i></td>
-          <td><i class='bx bx-trash-alt' data-action='delete' data-id="${todo.id}"></i></td>
+          <td><i class='bx bx-trash' data-action='delete' data-id="${todo.id}"></i></td>
         `;
-        todoTableBody.appendChild(tr);
-      }
-    });
-  }
+      todoTableBody.appendChild(tr);
+    }
+
+    /* ================= MOBILE CARDS ================= */
+    else {
+      const card = document.createElement("div");
+      card.className = "todo-card";
+
+      card.innerHTML = editingID === todo.id
+        ? `
+          <input class="card-edit-input" data-id="${todo.id}" value="${escapeHtml(todo.text)}">
+          <input class="card-date-input" type="date" id="edit-date-${todo.id}" value="${todo.date !== "No date" ? todo.date : ""}">
+          <div class="todo-card-actions">
+            <i class='bx bx-save' data-action='save' data-id="${todo.id}"></i>
+            <i class='bx bx-x' data-action='cancel'></i>
+          </div>
+        `
+        : `
+          <div class="todo-card-header ${strike}">
+            <input type="checkbox" data-action="toggle" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
+            ${escapeHtml(todo.text)}
+          </div>
+          <div class="todo-card-date">${todo.date}</div>
+          <div class="todo-card-status">${getStatusBadge(todo.status)}</div>
+          <div class="todo-card-actions">
+            <i class='bx bx-edit' data-action='edit' data-id="${todo.id}"></i>
+            <i class='bx bx-trash' data-action='delete' data-id="${todo.id}"></i>
+          </div>
+        `;
+
+      mobileList.appendChild(card);
+    }
+  });
+}
 
   // STATS
   function updateStats() {

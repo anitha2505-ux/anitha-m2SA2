@@ -61,12 +61,12 @@ body {
 
 #dateTimeDisplay {
   margin-top: 6px;
-  font-size: 1.05rem;      
+  font-size: 1.05rem;      /* slightly larger for visibility */
   font-weight: 600;
-  color: #ffffff;          
+  color: #ffffff;          /* pure neon white */
   text-shadow: 
         0 0 6px rgba(255, 255, 255, 0.9),
-        0 0 12px rgba(78, 205, 196, 0.9),   
+        0 0 12px rgba(78, 205, 196, 0.9),   /* teal glow to match palette */
         0 0 20px rgba(255, 255, 255, 0.6);
 }
 
@@ -316,7 +316,7 @@ body {
   color: #333333;
 }
 
-/* Mobile Cards  */
+/* ========== Mobile Cards ========== */
 #mobileList {
   margin-top: 10px;
 }
