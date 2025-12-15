@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStats();
     await saveTodosToAPI();
   }
-  /* ================= EXPORT TO EXCEL ================= */
+  // EXPORT TO EXCEL 
 
   exportExcelBtn.addEventListener("click", () => {
     if (!todos.length) {
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Download file
     XLSX.writeFile(workbook, "TaskGlide_Tasks.xlsx");
   });
-  
+
   // RENDER
   function renderTodos() {
     todoTableBody.innerHTML = "";
